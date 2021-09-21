@@ -16,7 +16,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('created_at', 'desc')->paginate(3);
+        $categories = Category::orderBy('created_at', 'desc')->paginate(5);
         return view('dashboard.categories.index', ['categories' => $categories]);
     }
 
