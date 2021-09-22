@@ -8,7 +8,10 @@ use App\Models\PostImage;
 use App\Helpers\CustomUrl;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\StorePostsPost;
+use App\Http\Requests\UpdatePostsPost;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -27,6 +30,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        $this->sendMail();
         $posts = Post::orderBy('created_at', 'desc')->paginate(10);
         return view('dashboard.posts.index', ['posts' => $posts]);
     }
@@ -58,8 +62,15 @@ class PostController extends Controller
         // $titulo = $request->input('title');
         // $titulo = $request->title;
         $urlSlug = CustomUrl::url_slug($request->title);
+
         $requestData = $request->validated();
         $requestData['url_clean'] = $urlSlug;
+
+        $validator = Validator::make($requestData, StorePostsPost::myRules());
+
+        if ($validator->fails()) {
+            return redirect('dashboard/posts/create')->withErrors($validator)->withInput();
+        }
 
         Post::create($requestData);
         return redirect()->action([PostController::class, 'create'])->with('status', 'Data saved!');
@@ -96,9 +107,11 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePostsPost $request, Post $post)
+    public function update(UpdatePostsPost $request, Post $post)
     {
-        $post->update($request->validated());
+        $requestData = $request->validated();
+        $requestData['url_clean'] = CustomUrl::url_slug($request->title);
+        $post->update($requestData);
         return redirect()->action([PostController::class, 'index'])->with('status', 'Data updated!');
     }
 
@@ -130,5 +143,42 @@ class PostController extends Controller
         ]);
 
         return redirect()->action([PostController::class, 'create'])->with('status', 'Image saved!');
+    }
+
+    /**
+     * para subir imegen del ck editor
+     */
+    public function contentImage(Request $request) {
+        $request->validate([
+            'image' => 'required|mimes:png,jpg,jpeg|max:10240' //10Mb
+        ]);
+
+        $filename = time().'.'.$request->image->extension();
+
+        $request->image->move(public_path('images'), $filename);
+
+        return response()->json(['default' => URL::to('/').'images/'.$filename]);
+    }
+
+    private function sendMail() {
+        $data['title'] = 'Titulo mail';
+
+        Mail::send('emails.email', $data, function ($message) {
+            $message->from('ing.mcbuenaonda@gmail.com', 'Carlos Glez');
+            $message->sender('john@johndoe.com', 'John Doe');
+            $message->to('ing.carlos.cerati@gmail.com', 'Carlos Glez');
+            // $message->cc('john@johndoe.com', 'John Doe');
+            // $message->bcc('john@johndoe.com', 'John Doe');
+            $message->replyTo('carlos_cerati@icg.com', 'John Doe');
+            $message->subject('Gracias por la weed');
+            // $message->priority(3);
+            // $message->attach('pathToFile');
+        });
+
+        if (Mail::failures()) {
+            return 'mensaje no enviado';
+        }else{
+            return 'mensaje enviado';
+        }
     }
 }

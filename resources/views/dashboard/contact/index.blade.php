@@ -2,15 +2,13 @@
 
 @section('content')
 
-<a href="{{ route('posts.create') }}" class="btn btn-dark my-3">Crear</a>
-
 <table class="table table-striped">
     <thead class="bg-dark text-white">
         <tr>
             <th>Id</th>
-            <th>Titulo</th>
-            <th>Categoria</th>
-            <th>Posteado</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
             <th>Creacion</th>
             <th>Actualizacion</th>
             <th>Acciones</th>
@@ -18,26 +16,24 @@
     </thead>
 
     <tbody>
-        @foreach ($posts as $post)
+        @foreach ($contacts as $contact)
             <tr>
-                <td>{{ $post->id }}</td>
-                <td>{{ $post->title }}</td>
-                <td>{{ $post->category->name }}</td>
-                <td>{{ $post->posted }}</td>
-                <td>{{ $post->created_at->format('d-M-Y') }}</td>
-                <td>{{ $post->updated_at->format('d-M-Y') }}</td>
+                <td>{{ $contact->id }}</td>
+                <td>{{ $contact->name }}</td>
+                <td>{{ $contact->lastname }}</td>
+                <td>{{ $contact->email }}</td>
+                <td>{{ $contact->created_at->format('d-M-Y') }}</td>
+                <td>{{ $contact->updated_at->format('d-M-Y') }}</td>
                 <td>
-                    <a href="{{ route('posts.show', $post->id) }}" class="btn btn-success">Ver</a>
-                    <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-primary">Editar</a>
-                    <a href="{{ route('post-comment.post', $post->id) }}" class="btn btn-primary">Comentarios</a>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ $post->id }}">Borrar</button>
+                    <a href="{{ route('contact.show', $contact->id) }}" class="btn btn-success">Ver</a>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ $contact->id }}">Borrar</button>
                 </td>
             </tr>
         @endforeach
     </tbody>
 </table>
 
-{{ $posts->links() }}
+{{ $contacts->links() }}
 
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -55,7 +51,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <form id="frmDelete" action="{{ route('posts.destroy', 0) }}" data-action="{{ route('posts.destroy', 0) }}" method="POST">
+                <form id="frmDelete" action="{{ route('contact.destroy', 0) }}" data-action="{{ route('contact.destroy', 0) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button class="btn btn-danger" type="submit"> Eliminar</button>

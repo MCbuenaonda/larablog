@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\web\WebController;
 use App\Http\Controllers\dashboard\PostController;
 use App\Http\Controllers\dashboard\UserController;
+use App\Http\Controllers\dashboard\ContactController;
 use App\Http\Controllers\dashboard\CategoriesController;
+use App\Http\Controllers\dashboard\PostCommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +31,16 @@ Route::get('/contact', [WebController::class, 'contact']);
 // Route::get('dashboard/posts', [PostController::class, 'index'])->name('index');
 Route::resource('dashboard/posts', PostController::class);
 Route::post('dashboard/posts/{post}/image', [PostController::class, 'image'])->name('posts.image');
+Route::post('dashboard/posts/content_image', [PostController::class, 'contentImage']);
 
 Route::resource('dashboard/categories', CategoriesController::class);
 
 Route::resource('dashboard/users', UserController::class);
+
+Route::resource('dashboard/contact', ContactController::class)->only(['index', 'show', 'destroy']);
+Route::resource('dashboard/post-comment', PostCommentController::class)->only(['index', 'show', 'destroy']);
+
+Route::get('dashboard/post-comment/{post}/post', [PostCommentController::class, 'post'])->name('post-comment.post');
 
 Auth::routes();
 

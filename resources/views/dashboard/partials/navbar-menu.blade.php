@@ -19,6 +19,10 @@
                     <a class="dropdown-item" href="{{ route('users.index') }}">Usuarios</a>
                 </div>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('contact.index') }}"> Contactos</a>
+            </li>
         </ul>
 
         <ul class="navbar-nav">

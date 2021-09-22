@@ -13,9 +13,6 @@
 <fieldset class="form-group row">
     <legend class="col-form-legend col-sm-1-12">Group name</legend>
     <div class="col-sm-12">
-        <label for="url_clean" class="col-sm-1-12 col-form-label">Url limpia</label>
-        <input type="text" class="form-control" name="url_clean" id="url_clean" placeholder="" value="{{ old('url_clean', $post->url_clean) }}">
-
         <div class="form-group">
             <label for="exampleFormControlSelect1">Categoria</label>
             <select class="form-control" id="category_id" name="category_id">

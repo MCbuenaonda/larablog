@@ -4,6 +4,7 @@ namespace App\Http\Controllers\dashboard;
 
 use App\Models\Rol;
 use App\Models\User;
+use App\Events\UserCreated;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -41,7 +42,8 @@ class UserController extends Controller
     public function store(StoreUsersUser $request) {
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
-        User::create($data);
+        $user = User::create($data);
+        event(new UserCreated($user));
         return redirect()->action([UserController::class, 'create'])->with('status', 'Data saved!');
     }
 

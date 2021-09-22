@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\PostSeeder;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\PostImageSeeder;
+use Database\Seeders\PostCommentsSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,6 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(PostSeeder::class);
         $this->call(PostImageSeeder::class);
+        $this->call(ContactSeeder::class);
+        $this->call(PostCommentsSeeder::class);
 
     }
 }

@@ -4,18 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePostsPost extends FormRequest
+class UpdatePostsPost extends FormRequest
 {
 
-    public static function myRules() {
-        return [
-            'title' => 'required|max:255',
-            'url_clean' => 'unique:posts',
-            'content' => 'required',
-            'category_id' => 'required',
-            'posted' => 'required'
-        ];
-    }
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -33,6 +24,12 @@ class StorePostsPost extends FormRequest
      */
     public function rules()
     {
-        return $this->myRules();
+        return [
+            'title' => 'required|max:255',
+            'url_clean' => 'unique:posts,url_clean,'.$this->route('post')->id,
+            'content' => 'required',
+            'category_id' => 'required',
+            'posted' => 'required'
+        ];
     }
 }
