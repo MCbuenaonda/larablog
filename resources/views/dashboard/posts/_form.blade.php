@@ -23,6 +23,15 @@
         </div>
 
         <div class="form-group">
+            <label for="tags_id">Tags</label>
+            <select multiple class="form-control" id="tags_id" name="tags_id[]">
+                @foreach ($tags as $title => $id)
+                    <option {{ in_array( $id, old('tags_id') ?: $post->tags->pluck('id')->toArray()) ? 'selected' : '' }} value="{{ $id }}">{{$title}}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group">
             <label for="exampleFormControlSelect1">Posteado</label>
             <select class="form-control" id="posted" name="posted">
                 @include('dashboard.partials.option-yes-no', ['val' => $post->posted])

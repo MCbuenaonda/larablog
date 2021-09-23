@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Seeders\PostSeeder;
+use Database\Seeders\TagsSeeder;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\PostImageSeeder;
 use Database\Seeders\PostCommentsSeeder;
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PostImageSeeder::class);
         $this->call(ContactSeeder::class);
         $this->call(PostCommentsSeeder::class);
+        $this->call(TagsSeeder::class);
 
     }
 }

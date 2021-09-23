@@ -45,5 +45,22 @@ class PostCommentController extends Controller
         return view('dashboard.post-comment.index', ['postComments' => $postComments, 'posts' => $posts, 'post' => $post]);
     }
 
+    public function jshow(PostComment $postComment) {
+        return response()->json($postComment);
+        // return view('dashboard.post-comment.show', ['postComment' => $postComment]);
+    }
+
+    public function process(PostComment $postComment) {
+        if ($postComment->approved == '0') {
+            $postComment->approved = '1';
+        }else{
+            $postComment->approved = '0';
+        }
+
+        $postComment->save();
+
+        return response()->json($postComment->approved);
+    }
+
 
 }

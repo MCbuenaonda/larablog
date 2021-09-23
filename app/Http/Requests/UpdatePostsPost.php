@@ -29,7 +29,8 @@ class UpdatePostsPost extends FormRequest
             'url_clean' => 'unique:posts,url_clean,'.$this->route('post')->id,
             'content' => 'required',
             'category_id' => 'required',
-            'posted' => 'required'
+            'posted' => 'required',
+            'tags_id' => 'required'
         ];
     }
 }

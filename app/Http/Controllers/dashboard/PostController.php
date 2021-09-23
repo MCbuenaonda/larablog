@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\dashboard;
 
+use App\Models\Tag;
 use App\Models\Post;
 use App\Models\Category;
 use App\Models\PostImage;
@@ -30,7 +31,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $this->sendMail();
+        // $this->sendMail();
         $posts = Post::orderBy('created_at', 'desc')->paginate(10);
         return view('dashboard.posts.index', ['posts' => $posts]);
     }
@@ -42,8 +43,9 @@ class PostController extends Controller
      */
     public function create()
     {
+        $tags = Tag::pluck('id','title');
         $categories = Category::pluck('id', 'name');
-        return view('dashboard.posts.create', ['post' => new Post(), 'categories' => $categories]);
+        return view('dashboard.posts.create', ['post' => new Post(), 'categories' => $categories, 'tags' => $tags]);
     }
 
     /**
@@ -72,7 +74,10 @@ class PostController extends Controller
             return redirect('dashboard/posts/create')->withErrors($validator)->withInput();
         }
 
-        Post::create($requestData);
+        $post = Post::create($requestData);
+
+        $post->tags()->sync($request->tags_id);
+
         return redirect()->action([PostController::class, 'create'])->with('status', 'Data saved!');
     }
 
@@ -94,10 +99,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
-    {
+    public function edit(Post $post) {
+        // dd($post->tags);
+        $tag = Tag::find(1);
+        // dd($tag->posts);
+        $tags = Tag::pluck('id','title');
+
         $categories = Category::pluck('id', 'name');
-        return view('dashboard.posts.edit', ['post' => $post, 'categories' => $categories]);
+        return view('dashboard.posts.edit', ['post' => $post, 'categories' => $categories, 'tags' => $tags]);
     }
 
     /**
@@ -109,6 +118,11 @@ class PostController extends Controller
      */
     public function update(UpdatePostsPost $request, Post $post)
     {
+        // dd($request->tags_id);
+        // $post->tags()->attach(1);
+        // $post->tags()->detach(1);
+        $post->tags()->sync($request->tags_id);
+
         $requestData = $request->validated();
         $requestData['url_clean'] = CustomUrl::url_slug($request->title);
         $post->update($requestData);

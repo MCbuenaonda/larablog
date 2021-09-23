@@ -13,7 +13,8 @@ class StorePostsPost extends FormRequest
             'url_clean' => 'unique:posts',
             'content' => 'required',
             'category_id' => 'required',
-            'posted' => 'required'
+            'posted' => 'required',
+            'tags_id' => 'required'
         ];
     }
     /**
